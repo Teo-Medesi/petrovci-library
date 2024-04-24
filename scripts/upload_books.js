@@ -1,25 +1,29 @@
 #!/usr/bin/env node
-
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, where, query, getDocs } from 'firebase/firestore/lite';
 import fs from 'fs/promises';
 import yargs from 'yargs';
 
-// Initialize Firebase App
-
-const firebaseConfig = {
-  // replace with your firebase configuration
-};
-const app = initializeApp(firebaseConfig);
-
-// Get a reference to Firestore
-const db = getFirestore(app);
 
 // Parse command-line arguments
 const argv = yargs(process.argv.slice(2))
   .usage('Usage: $0 --filepath [filepath]')
   .demandOption(['filepath'])
   .argv;
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: "petrovci-library.firebaseapp.com",
+  projectId: "petrovci-library",
+  storageBucket: "petrovci-library.appspot.com",
+  messagingSenderId: "515915234034",
+  appId: "1:515915234034:web:8694a6911fc18ac28dee6b",
+  measurementId: "G-QM6CHRFHR6"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
 
 // Read JSON file
 const filePath = argv.filepath;
