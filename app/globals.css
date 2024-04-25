@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+input {
+  outline: none !important;
+}
+
+.search-input {
+  background: no-repeat bottom, 50% calc(100% - 1px);
+  background-size: 0 100%, 100% 100%;
+}
+
+.search-input:focus {
+  background-size: 100% 100%, 100% 100%;
+  transition-duration: .3s;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
