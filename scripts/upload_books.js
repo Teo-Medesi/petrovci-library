@@ -31,15 +31,20 @@ const filePath = argv.filepath;
 // Upload data to Firestore
 async function uploadToFirestore(data) {
   for (const book of data) {
-    // Check for duplicate
-    const q = query(collection(db, 'books'), where('author_last_name', '==', book.author_last_name), where('book_title', '==', book.book_title));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-      // Add book to Firestore
-      await addDoc(collection(db, 'books'), book);
-      console.log(`Added book: ${book.book_title} by ${book.author_full_name}`);
+    // Ensure the required properties are present
+    if (book.author_last_name && book.book_title) {
+      // Check for duplicate
+      const q = query(collection(db, 'books'), where('author_last_name', '==', book.author_last_name), where('book_title', '==', book.book_title));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        // Add book to Firestore
+        await addDoc(collection(db, 'books'), book);
+        console.log(`Added book: ${book.book_title} by ${book.author_full_name}`);
+      } else {
+        console.log(`Skipping duplicate: ${book.book_title} by ${book.author_full_name}`);
+      }
     } else {
-      console.log(`Skipping duplicate: ${book.book_title} by ${book.author_full_name}`);
+      console.log(`Skipping book with missing properties: ${JSON.stringify(book)}`);
     }
   }
 }
