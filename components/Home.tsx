@@ -6,6 +6,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 import { Book } from "@/types/index.js";
 import { db } from "@/firebase/firebase.config";
+import BooksPreview from "./Books/BooksPreview";
 
 const Home = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -59,24 +60,21 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getBooksBySearch();
+    if (search) getBooksBySearch();
+    else setRandomDisplayBooks(books);
   }, [search]);
 
   return (
     <div className='w-screen flex-col px-6 lg:p-0 min-h-screen flex items-center'>
-      <h1 className='text-3xl mb-16 mt-60'>Upišite ime knjige ili autora</h1>
+      <h1 className='text-center lg:text-start text-3xl mb-16 mt-60'>Upišite ime knjige ili autora</h1>
       <input
         onChange={(event) => setSearch(event.target.value)}
         type="text"
         className='input search-input pb-3 text-gray-700 w-full lg:w-1/3 box-content rounded-none border-b border-x-0 border-t-0 border-gray-500 text-xl text-center lg:text-2xl '
       />
-      <div>
-        <h2>Displaying <span className="uppercase">{displayBooks.length}</span> book(s)</h2>
-        <ul>
-          {displayBooks.map((book) => (
-            <li className="text-black" key={book.id}>{book.book_title} by {book.author_full_name}</li>
-          ))}
-        </ul>
+      <div className="w-full p-12 text-center">
+        <h2 className="mb-12">Prikazano: <span className="uppercase">{displayBooks.length}</span> knjiga</h2>
+        <BooksPreview books={displayBooks}/>
       </div>
     </div>
   );

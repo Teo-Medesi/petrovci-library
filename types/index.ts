@@ -1,4 +1,5 @@
 interface Book {
+    cover_image?: string,
     id?: string,
     author_first_name: string,
     author_last_name: string,
