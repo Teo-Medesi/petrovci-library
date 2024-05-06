@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <div className="bg-white text-black">
+        <div className="bg-white overflow-x-hidden text-black">
           {children}
         </div>
       </body>

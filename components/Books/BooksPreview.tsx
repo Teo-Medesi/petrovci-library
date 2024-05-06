@@ -1,10 +1,11 @@
 "use client";
 import { Book } from '@/types'
+import Link from 'next/link';
 import React from 'react'
 
 const Book = ({ book }: { book: Book }) => {
   return (
-    <div className='cursor-pointer w-full lg:w-[128px] lg:min-h-[194px] flex flex-col items-center gap-2'>
+    <Link href={`/books/${book.id}`} className='cursor-pointer w-full lg:w-[128px] lg:min-h-[194px] flex flex-col items-center gap-2'>
       {
         book?.cover_image
           ?
@@ -22,13 +23,13 @@ const Book = ({ book }: { book: Book }) => {
       <p className='text-lg'>{book.book_title}</p>
       {book.available ? <p className='mt-4 text-green-500'>Dostupno</p> : <p className='mt-4 text-red-500'>Nedostupno</p>}
 
-    </div>
+    </Link>
   )
 }
 
 const BooksPreview = ({ books }: { books: Book[] }) => {
   return (
-    <div className='book-grid w-full'>
+    <div className='book-grid w-full overflow-x-hidden'>
       {
         books.map((book) => <Book book={book} />)
       }
