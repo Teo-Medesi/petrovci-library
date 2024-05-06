@@ -24,23 +24,37 @@ async function updateBooks() {
             const book = docSnapshot.data();
 
             if (!book.cover_image) {
-                const request_url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${book.author_full_name}+intitle:${book.book_title}`;
-                const response = await fetch(request_url);
-                const data = await response.json();
+                const requestUrlCroatian = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${book.author_full_name}+intitle:${book.book_title}`;
+                const responseCroatian = await fetch(requestUrlCroatian);
+                const dataCroatian = await responseCroatian.json();
 
-                let cover_image = "";
-                // Check all books in the items array for a cover image
-                if (data.items) {
-                    for (const bookItem of data.items) {
+                let coverImage = "";
+
+                // Check if Croatian cover image is available
+                if (dataCroatian.items && dataCroatian.items.length > 0) {
+                    for (const bookItem of dataCroatian.items) {
                         const imageLinks = bookItem.volumeInfo?.imageLinks;
                         if (imageLinks?.thumbnail) {
-                            cover_image = imageLinks.thumbnail;
+                            coverImage = imageLinks.thumbnail;
                             break; // Stop once a cover image is found
                         }
                     }
+                } else {
+                    // If no Croatian cover image found, search for English version
+                    const requestUrlEnglish = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${book.author_full_name}+intitle:${book.book_title}&langRestrict=en`;
+                    const responseEnglish = await fetch(requestUrlEnglish);
+                    const dataEnglish = await responseEnglish.json();
+
+                    if (dataEnglish.items && dataEnglish.items.length > 0) {
+                        const imageLinks = dataEnglish.items[0].volumeInfo?.imageLinks;
+                        if (imageLinks?.thumbnail) {
+                            coverImage = imageLinks.thumbnail;
+                        }
+                    }
                 }
+
                 const docRef = doc(db, 'books', docSnapshot.id);
-                await updateDoc(docRef, { cover_image });
+                await updateDoc(docRef, { cover_image: coverImage });
                 
                 console.log(`Updated cover image for book ${docSnapshot.id}`);
             } else {
